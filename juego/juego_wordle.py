@@ -29,9 +29,15 @@ class Tablero:
         if self.num_intentos <= 6:
             for m in range(5):
                 e = input("letra: ")
-                for i in range(6):
-                    for j in range(5):
-                        pass
+                self.matriz[self.num_intentos][m].append(e)
+            self.num_intentos += 1
+            for i in range(6):
+                for j in range(5):
+                    print(self.matriz[i][j])
+        else:
+            for i in range(6):
+                for j in range(5):
+                    print(self.matriz[i][j])
 
     def verificar_fila(self):
         pass
