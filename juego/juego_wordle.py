@@ -1,7 +1,7 @@
 import random
 
 class Wordle:
-    def seleccionar_palabra(self):
+    def seleccionar_palabra(self) -> str:
         with open("lista_palabras.txt", "r") as archivo:
             lineas = archivo.readlines()
             lista = [linea.strip() for linea in lineas]
