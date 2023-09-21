@@ -1,26 +1,38 @@
 import random
 
 class Wordle:
-    def seleccionar_palabra(self) -> str:
+    def abrir_archivo(self) -> list:
         with open("lista_palabras.txt", "r") as archivo:
             lineas = archivo.readlines()
             lista = [linea.strip() for linea in lineas]
+            return lista
+    def seleccionar_palabra(self) -> str:
+        lista = self.abrir_archivo()
         num_pal = random.randint(0, len(lista) - 1)
         pal = lista[num_pal]
         return pal
+    def verificar_ganador(self, tablero):
+        # si tengo el num_intentos es 6 y una fila vacía es porque ganó
+        for fila in tablero.matriz:
+            if all(elemento == "_" for elemento in fila):
+                return True
+        return False
     def ejecutar_juego(self, wordle):
         tablero = Tablero()
         palabra_correcta = wordle.seleccionar_palabra()
         while tablero.num_intentos < 6:
             tablero.imprimir_tablero()
-            tablero.ingresar_palabra(palabra_correcta)
+            tablero.actualizar_tablero(palabra_correcta)
             tablero.colorear_matriz(palabra_correcta)
             if "".join(tablero.matriz[tablero.num_intentos-1]) == palabra_correcta:
                 print("Has adivinado la palabra!")
                 break
-
-        tablero.imprimir_tablero()
-        print(f"¡Agotaste tus intentos! La palabra correcta era: {palabra_correcta}")
+        if self.verificar_ganador(tablero) and tablero.num_intentos == 6:
+            tablero.imprimir_tablero()
+            print("Has adivinado la palabra!")
+        else:
+            tablero.imprimir_tablero()
+            print(f"¡Agotaste tus intentos! La palabra correcta era: {palabra_correcta}")
 
 class Color:
     def __init__(self):
@@ -44,7 +56,7 @@ class Tablero:
             print(" ".join(fila))
         print(f"Intento {self.num_intentos}/6")
 
-    def ingresar_palabra(self, palabra_correcta):
+    def actualizar_tablero(self, palabra_correcta):
         if self.num_intentos < 6:
             print("Ingresa una palabra de 5 letras en minúsculas:")
             palabra = input()
@@ -62,7 +74,6 @@ class Tablero:
                 print("Por favor, ingresa una palabra válida de 5 letras en minúsculas.")
         else:
             print("Ya has alcanzado el límite de intentos.")
-
     def colorear_matriz(self, palabra_correcta):
         nueva_lista = palabra_correcta
         for j in range(5):
