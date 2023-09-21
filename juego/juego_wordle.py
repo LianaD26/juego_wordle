@@ -96,5 +96,14 @@ class Tablero:
             else:
                 self.matriz[self.num_intentos - 1][j] = f"{Color().GRIS}{letra}{Color().RESET}"
 
+
+class Cronometro:
+    def iniciar_detener(self):
+        pass
+    def reset(self):
+        pass
+    def actualizar_cronometro(self):
+        pass
+
 wordle = Wordle()
 wordle.ejecutar_juego(wordle)
