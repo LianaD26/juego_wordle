@@ -1,7 +1,7 @@
 import random
 
 class Wordle:
-    def abrir_archivo(self) -> list:
+    def abrir_archivo(self) -> list[str]:
         with open("lista_palabras.txt", "r") as archivo:
             lineas = archivo.readlines()
             lista = [linea.strip() for linea in lineas]
@@ -11,12 +11,18 @@ class Wordle:
         num_pal = random.randint(0, len(lista) - 1)
         pal = lista[num_pal]
         return pal
-    def verificar_ganador(self, tablero):
+    def verificar_ganador(self, tablero) -> bool:
         # si tengo el num_intentos es 6 y una fila vacía es porque ganó
         for fila in tablero.matriz:
             if all(elemento == "_" for elemento in fila):
                 return True
         return False
+    def comprobar_existencia(self, palabra_ingresada) -> bool:
+        with open("palabras_completas.txt", "r") as archivo:
+            lineas = archivo.readlines()
+            lista = [linea.strip() for linea in lineas]
+        if palabra_ingresada in lista:
+            return True
     def ejecutar_juego(self, wordle):
         tablero = Tablero()
         palabra_correcta = wordle.seleccionar_palabra()
@@ -60,18 +66,21 @@ class Tablero:
         if self.num_intentos < 6:
             print("Ingresa una palabra de 5 letras en minúsculas:")
             palabra = input()
-            if len(palabra) == 5 and palabra.isalpha() and palabra.islower():
-                if palabra == palabra_correcta:
-                    for i, letra in enumerate(palabra):
-                        self.matriz[self.num_intentos][i] = letra
-                    self.num_intentos = 6
-                    return
+            if Wordle().comprobar_existencia(palabra):
+                if len(palabra) == 5 and palabra.isalpha() and palabra.islower():
+                    if palabra == palabra_correcta:
+                        for i, letra in enumerate(palabra):
+                            self.matriz[self.num_intentos][i] = letra
+                        self.num_intentos = 6
+                        return
+                    else:
+                        for i, letra in enumerate(palabra):
+                            self.matriz[self.num_intentos][i] = letra
+                        self.num_intentos += 1
                 else:
-                    for i, letra in enumerate(palabra):
-                        self.matriz[self.num_intentos][i] = letra
-                    self.num_intentos += 1
+                    print("Por favor, ingresa una palabra válida de 5 letras en minúsculas.")
             else:
-                print("Por favor, ingresa una palabra válida de 5 letras en minúsculas.")
+                print("Ingrese una palabra válida!")
         else:
             print("Ya has alcanzado el límite de intentos.")
     def colorear_matriz(self, palabra_correcta):
